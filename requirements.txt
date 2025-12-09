@@ -1,0 +1,6 @@
+Flask
+requests
+python-dotenv
+gunicorn
+beautifulsoup4
+lxml

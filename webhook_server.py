@@ -48,7 +48,7 @@ def run_enrichment_async(event_payload: Dict[str, Any]) -> None:
     print(f"[WEBHOOK] Payload: {json.dumps(event_payload, indent=2)}")
 
     try:
-        code = runner.run_all_scripts(target_item_id=that_id)
+        code = runner.run_all_scripts()
         print(f"[WEBHOOK] Enrichment finished with exit code {code}")
     except Exception as e:
         print(f"[WEBHOOK] ERROR during enrichment: {e}")

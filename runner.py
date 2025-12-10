@@ -45,43 +45,20 @@ SCRIPTS_TO_RUN = [
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def run_script(script_name: str) -> int:
-    """
-    Run a single child script with the same Python interpreter.
-    Return its exit code (0 = success, nonzero = failure).
-    """
-    script_path = os.path.join(BASE_DIR, script_name)
-    if not os.path.isfile(script_path):
-        print(f"[RUNNER] ERROR: Script not found: {script_path}")
-        return 1
+def run_script(script_name: str, target_item_id: str | None) -> int:
+    env = os.environ.copy()
+    if target_item_id:
+        env["TARGET_ITEM_ID"] = target_item_id
+    return subprocess.run(
+        [sys.executable, script_name],
+        cwd=BASE_DIR,
+        env=env,
+        check=False,
+    ).returncode
 
-    print(f"\n[RUNNER] ==== Starting {script_name} at {datetime.now().isoformat(timespec='seconds')} ====")
-    try:
-        result = subprocess.run(
-            [sys.executable, script_path],
-            cwd=BASE_DIR,
-            check=False
-        )
-        print(f"[RUNNER] ==== Finished {script_name} with exit code {result.returncode} ====")
-        return result.returncode
-    except Exception as e:
-        print(f"[RUNNER] EXCEPTION running {script_name}: {e}")
-        return 1
-
-
-def run_all_scripts() -> int:
-    """
-    Run all scripts in SCRIPTS_TO_RUN in order.
-    Returns the worst (highest) exit code.
-    """
-    print(f"[RUNNER] Starting full enrichment run at {datetime.now().isoformat(timespec='seconds')}")
-    worst_code = 0
+def run_all_scripts(target_item_id: str | None = None) -> int:
     for script in SCRIPTS_TO_RUN:
-        code = run_script(script)
-        if code != 0:
-            worst_code = max(worst_code, code)
-    print(f"[RUNNER] Full run finished at {datetime.now().isoformat(timespec='seconds')} with overall status {worst_code}")
-    return worst_code
+        run_script(script, target_item_id)
 
 
 def main():

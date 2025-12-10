@@ -34,9 +34,6 @@ load_dotenv()
 MONDAY_API_TOKEN = os.getenv("MONDAY_API_TOKEN")
 MONDAY_BOARD_ID  = os.getenv("MONDAY_BOARD_ID")
 
-# 🔹 NEW: optional target item for webhook runs
-TARGET_ITEM_ID   = os.getenv("TARGET_ITEM_ID")  # None if not set
-
 WEBSITE_COL_TITLE  = "Website"     # Link column title
 AD_SAMPLES_TITLE   = "Ad Samples"  # Files column title
 
@@ -244,19 +241,14 @@ def main():
     if ad_files_col["type"].lower() not in ("file", "files"):
         raise SystemExit(f"❌ Column '{AD_SAMPLES_TITLE}' is not a Files column (type={ad_files_col['type']}).")
 
-    print(f"[INFO] Website column id    = {website_col['id']} (type={website_col['type']})")
+    print(f"[INFO] Website column id   = {website_col['id']} (type={website_col['type']})")
     print(f"[INFO] Ad Samples column id = {ad_files_col['id']} (type={ad_files_col['type']})")
     print(f"[INFO] Overwrite existing files? {OVERWRITE_EXISTING}")
-
-    # 🔹 NEW: show target item if set
-    if TARGET_ITEM_ID:
-        print(f"[INFO] TARGET_ITEM_ID = {TARGET_ITEM_ID}")
     print()
 
     items = fetch_items(MONDAY_BOARD_ID)
-    print(f"[INFO] Items fetched: {len(items)}")
+    print(f"[INFO] Items fetched: {len(items)}\n")
 
-    # 🔹 NEW: if TARGET_ITEM_ID is set, only keep that one item
     if TARGET_ITEM_ID:
         filtered = [it for it in items if str(it["id"]) == str(TARGET_ITEM_ID)]
         print(f"[INFO] Filtered to TARGET_ITEM_ID={TARGET_ITEM_ID} → {len(filtered)} matching item(s)")
@@ -264,8 +256,6 @@ def main():
         if not items:
             print("[INFO] No matching item for TARGET_ITEM_ID; nothing to do.")
             return
-
-    print()
 
     for i, item in enumerate(items, 1):
         name = item["name"]

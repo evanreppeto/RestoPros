@@ -38,20 +38,16 @@ import runner  # runner.py must be in the same directory
 app = Flask(__name__)
 
 
-def run_enrichment_async(event_payload: Dict[str, Any]) -> None:
-    """
-    Background job that actually runs the scripts.
-    event_payload is just logged for debugging; runner works on the full board.
-    """
-    print("\n[WEBHOOK] ==== Enrichment run triggered ====")
-    print(f"[WEBHOOK] Time: {datetime.now().isoformat(timespec='seconds')}")
-    print(f"[WEBHOOK] Payload: {json.dumps(event_payload, indent=2)}")
+def run_enrichment_async(event_payload: dict) -> None:
+    event = event_payload.get("event") or {}
+    target_item_id = None
+    for key in ("pulseId", "itemId", "entityId"):
+        if key in event:
+            target_item_id = str(event[key])
+            break
 
-    try:
-        code = runner.run_all_scripts()
-        print(f"[WEBHOOK] Enrichment finished with exit code {code}")
-    except Exception as e:
-        print(f"[WEBHOOK] ERROR during enrichment: {e}")
+    print(f"[WEBHOOK] Parsed target_item_id={target_item_id}")
+    runner.run_all_scripts(target_item_id=target_item_id)
 
 
 @app.route("/monday-hook", methods=["POST"])

@@ -24,6 +24,7 @@ from dotenv import load_dotenv
 
 # ---------------- Config ----------------
 load_dotenv()
+TARGET_ITEM_ID = os.getenv("TARGET_ITEM_ID")
 API_TOKEN = os.getenv("MONDAY_API_TOKEN")
 BOARD_ID  = os.getenv("MONDAY_BOARD_ID")
 
@@ -370,6 +371,14 @@ def main():
     # Fetch items
     items = fetch_items(BOARD_ID)
     print(f"[INFO] Items: {len(items)}")
+
+    if TARGET_ITEM_ID:
+        filtered = [it for it in items if str(it["id"]) == str(TARGET_ITEM_ID)]
+        print(f"[INFO] Filtered to TARGET_ITEM_ID={TARGET_ITEM_ID} → {len(filtered)} matching item(s)")
+        items = filtered
+        if not items:
+            print("[INFO] No matching item for TARGET_ITEM_ID; nothing to do.")
+            return
 
     for idx, it in enumerate(items, 1):
         col_map = {cv["id"]: (cv.get("text") or "") for cv in it.get("column_values", [])}

@@ -1,6 +1,7 @@
 import os 
 from dotenv import load_dotenv
 load_dotenv()
+TARGET_ITEM_ID = os.getenv("TARGET_ITEM_ID")
 
 # ======= CONFIG — EDIT THESE =======
 MONDAY_API_TOKEN = os.getenv("MONDAY_API_TOKEN")
@@ -210,6 +211,14 @@ def main():
 
     items = fetch_items(MONDAY_BOARD_ID)
     print(f"[INFO] Items: {len(items)}\n")
+
+    if TARGET_ITEM_ID:
+        filtered = [it for it in items if str(it["id"]) == str(TARGET_ITEM_ID)]
+        print(f"[INFO] Filtered to TARGET_ITEM_ID={TARGET_ITEM_ID} → {len(filtered)} matching item(s)")
+        items = filtered
+        if not items:
+            print("[INFO] No matching item for TARGET_ITEM_ID; nothing to do.")
+            return
 
     driver = make_driver(HEADLESS)
     try:

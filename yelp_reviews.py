@@ -260,6 +260,14 @@ def main():
     items = fetch_items(MONDAY_BOARD_ID)
     print(f"[INFO] Items fetched: {len(items)}")
 
+    if TARGET_ITEM_ID:
+        filtered = [it for it in items if str(it["id"]) == str(TARGET_ITEM_ID)]
+        print(f"[INFO] Filtered to TARGET_ITEM_ID={TARGET_ITEM_ID} → {len(filtered)} matching item(s)")
+        items = filtered
+        if not items:
+            print("[INFO] No matching item for TARGET_ITEM_ID; nothing to do.")
+            return
+
     for idx, item in enumerate(items, 1):
         name    = item["name"]
         item_id = item["id"]

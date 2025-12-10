@@ -3,7 +3,7 @@ import os, json, time, requests
 from dotenv import load_dotenv
 
 load_dotenv()
-
+TARGET_ITEM_ID = os.getenv("TARGET_ITEM_ID")
 API_TOKEN = os.getenv("MONDAY_API_TOKEN")
 BOARD_ID  = os.getenv("MONDAY_BOARD_ID")  # keep as string
 API_URL   = "https://api.monday.com/v2"

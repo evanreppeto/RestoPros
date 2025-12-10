@@ -31,6 +31,7 @@ from dotenv import load_dotenv
 # ============== CONFIG ==============
 
 load_dotenv()
+TARGET_ITEM_ID   = os.getenv("TARGET_ITEM_ID")
 MONDAY_API_TOKEN = os.getenv("MONDAY_API_TOKEN")
 MONDAY_BOARD_ID  = os.getenv("MONDAY_BOARD_ID")
 

@@ -26,7 +26,7 @@ SCRIPTS_TO_RUN = [
     "followers_cnt.py",     # fills Followers Count (numbers)
     "org_keywords.py",    # fills Organic/Top Organic Keywords (text)
     "ad_samples.py",
-    "google_ads",
+    "google_ads", 
     "fin_opt",
     "guarantee.py",
     "ins_vendor.py",
